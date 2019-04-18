@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute } from '@angular/router';
+
 import { ClientesService } from '../clientes.service';
 import { Cliente } from '../cliente';
+
 
 @Component({
   selector: 'app-cliente-form',
@@ -17,19 +21,21 @@ export class ClienteFormComponent implements OnInit {
   private subscription: Subscription;
 
   constructor(private route: ActivatedRoute,
-              private clienteService: ClientesService) { }
+              private router: Router,
+              private clienteService: ClientesService) { 
+              }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.novo();
     this.subscription = this.route.params.subscribe(
-      (params: any) => {        
+      (params: any) => {
         if (params.hasOwnProperty('id')) {
           this.isNew = false;
-          this.clienteIndex = +params['id'];
+          this.clienteIndex = params['id'];
           this.clienteService.get(this.clienteIndex)
           .subscribe(data => this.cliente = data);
         } else {
-          this.isNew = true;          
+          this.isNew = true;
         }
       }
     );
@@ -39,14 +45,23 @@ export class ClienteFormComponent implements OnInit {
     this.cliente = new Cliente();
   }
 
+  cancelar() {
+    this.voltar();
+  }
+
+  voltar() {
+    this.router.navigate(['/clientes']);
+  }
+
   salvar() {
     let result;
-    if (this.isNew){
+    if (this.isNew) {
       result = this.clienteService.add(this.cliente);
     } else {
       result = this.clienteService.update(this.cliente);
     }
     this.novo();
+    this.voltar();
     result.subscribe(data => alert('sucesso ' +data),
     err => {
       alert("An error occurred. "+ err);
@@ -55,15 +70,17 @@ export class ClienteFormComponent implements OnInit {
 
   excluir() {
     if (this.cliente.codigo == null) {
-      alert("Selecione algum cliente");
+      alert('Selecione algum cliente');
     } else {
-      if (confirm("Você realmente quer excluir o cliente " + this.cliente.nome + "?")) {
+      if (confirm('Você realmente quer excluir o cliente '+this.cliente.nome+'?')) {
         this.clienteService.remove(this.cliente.codigo)
-          .subscribe(
-            data => this.novo,
-            err => {
-              alert("Cliente não removido.");
-            });
+        .subscribe(
+          data => alert('Cliente removido '+data),
+          err => {
+            alert('Cliente não removido');
+          });
+          this.novo();
+          this.voltar();
       }
     }
   }

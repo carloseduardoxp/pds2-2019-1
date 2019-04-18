@@ -13,21 +13,16 @@ export class ClienteListComponent implements OnInit {
 
   clientes: Cliente[] = [];
 
-  criterio: String;
-
   ngOnInit() {
     this.clienteService.getAll()
-      .subscribe(data => this.clientes = data, err => {
-        alert('Aconteceu um erro!');
-      });
-
+      .subscribe(data => this.clientes = data,
+        err => alert('aconteceu um erro ' + err)
+      );
     this.clienteService.clientesChanged.subscribe(
       (observable: any) => observable.subscribe(
         data => this.clientes = data
       )
     );
   }
-
-
 
 }

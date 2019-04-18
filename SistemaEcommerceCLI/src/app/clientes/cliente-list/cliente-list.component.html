@@ -1,5 +1,8 @@
-  <table class="table table-hover">
-    <thead>
+<input type="text" [(ngModel)]="searchText" class="form-control" 
+placeholder="O que voc&ecirc; est&aacute; procurando?" /><br />
+
+<table class="table table-hover">
+  <thead>
       <tr>
         <th>C&oacute;digo</th>
         <th>Nome</th>
@@ -13,17 +16,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let clienteTabela of clientes">
+      <tr *ngFor="let clienteTabela of clientes | filter:searchText">
         <a [routerLink]="[clienteTabela.codigo]">
-        <td>{{clienteTabela.codigo}}</td> </a>
-        <td>{{clienteTabela.nome}}</td>
-        <td>{{clienteTabela.cargo}}</td>
-        <td>{{clienteTabela.endereco}}</td>
-        <td>{{clienteTabela.cidade}}</td>
-        <td>{{clienteTabela.cep}}</td>
-        <td>{{clienteTabela.pais}}</td>
-        <td>{{clienteTabela.telefone}}</td>
-        <td>{{clienteTabela.fax}}</td>
-        </tr>
-    </tbody>
-  </table>
+        <td>{{clienteTabela.codigo}}</td></a>
+        <td>{{clienteTabela.nome}}</td>	
+        <td>{{clienteTabela.cargo}}</td>	
+        <td>{{clienteTabela.endereco}}</td>	
+        <td>{{clienteTabela.cidade}}</td>	
+        <td>{{clienteTabela.cep}}</td>	
+        <td>{{clienteTabela.pais}}</td>	
+        <td>{{clienteTabela.telefone}}</td>	
+        <td>{{clienteTabela.fax}}</td>	
+      </tr>
+    </tbody>		
+</table> 
+<span [hidden]="(clientes | filter: searchText).length != 0">Infelizmente 
+  n&atilde;o temos o que voc&ecirc; est&aacute; procurando</span>

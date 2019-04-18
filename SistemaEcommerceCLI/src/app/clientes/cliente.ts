@@ -9,5 +9,4 @@ export class Cliente {
     pais: string;
     telefone: string;
     fax: string;
-    
 }
